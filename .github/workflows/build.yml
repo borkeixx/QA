@@ -21,5 +21,13 @@ jobs:
           python-version: "3.9"
       - name: Install requirements
         run: pip install -r requirements.txt
+      - name: Build coverage file
+        run: |
+          pytest --junitxml=pytest.xml --cov-report=term-missing:skip-covered --cov=app tests/ | tee pytest-coverage.txt
+      - name: Pytest coverage comment
+        uses: MishaKav/pytest-coverage-comment@main
+        with:
+          pytest-coverage-path: ./pytest-coverage.txt
+          junitxml-path: ./pytest.xml
       - name: Run ruff
         run: ruff .
